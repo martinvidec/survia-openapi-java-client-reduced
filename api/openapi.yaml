@@ -1,0 +1,403 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- description: Generated server url
+  url: http://localhost:8080
+paths:
+  /datasets:
+    get:
+      description: get-dataset
+      operationId: getCollectionResource-dataset-get_1
+      parameters:
+      - description: Zero-based page index (0..N)
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: The size of the page to be returned
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 20
+          minimum: 1
+          type: integer
+        style: form
+      - description: 'Sorting criteria in the format: property(,asc|desc). Default
+          sort order is ascending. Multiple sort criteria are supported.'
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/PagedModelEntityModelDataset'
+            application/x-spring-data-compact+json:
+              schema:
+                $ref: '#/components/schemas/PagedModelEntityModelDataset'
+            text/uri-list:
+              schema:
+                type: string
+          description: OK
+      tags:
+      - dataset-entity-controller
+      x-accepts: application/hal+json,application/x-spring-data-compact+json,text/uri-list
+    post:
+      description: create-dataset
+      operationId: postCollectionResource-dataset-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasetRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelDataset'
+          description: Created
+      tags:
+      - dataset-entity-controller
+      x-contentType: application/json
+      x-accepts: application/hal+json
+  /datasets/{id}:
+    delete:
+      description: delete-dataset
+      operationId: deleteItemResource-dataset-delete
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      tags:
+      - dataset-entity-controller
+      x-accepts: application/json
+    get:
+      description: get-dataset
+      operationId: getItemResource-dataset-get
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelDataset'
+          description: OK
+        "404":
+          description: Not Found
+      tags:
+      - dataset-entity-controller
+      x-accepts: application/hal+json
+    patch:
+      description: patch-dataset
+      operationId: patchItemResource-dataset-patch
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasetRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelDataset'
+          description: OK
+        "204":
+          description: No Content
+      tags:
+      - dataset-entity-controller
+      x-contentType: application/json
+      x-accepts: application/hal+json
+    put:
+      description: update-dataset
+      operationId: putItemResource-dataset-put
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasetRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelDataset'
+          description: OK
+        "201":
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EntityModelDataset'
+          description: Created
+        "204":
+          description: No Content
+      tags:
+      - dataset-entity-controller
+      x-contentType: application/json
+      x-accepts: application/hal+json
+  /profile:
+    get:
+      operationId: listAllFormsOfMetadata_1
+      responses:
+        "200":
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepresentationModelObject'
+          description: OK
+      tags:
+      - profile-controller
+      x-accepts: application/hal+json
+  /profile/datasets:
+    get:
+      operationId: descriptor_1_1_1
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/schema+json:
+              schema:
+                $ref: '#/components/schemas/JsonSchema'
+          description: OK
+      tags:
+      - profile-controller
+      x-accepts: '*/*,application/alps+json,application/schema+json'
+  /status:
+    get:
+      operationId: status
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+          description: OK
+      tags:
+      - status-controller
+      x-accepts: application/json
+components:
+  schemas:
+    AbstractJsonSchemaPropertyObject:
+      properties:
+        title:
+          type: string
+        readOnly:
+          type: boolean
+      type: object
+    Item:
+      properties:
+        type:
+          type: string
+        properties:
+          additionalProperties:
+            $ref: '#/components/schemas/AbstractJsonSchemaPropertyObject'
+          type: object
+        requiredProperties:
+          items:
+            type: string
+          type: array
+      type: object
+    JsonSchema:
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        properties:
+          additionalProperties:
+            $ref: '#/components/schemas/AbstractJsonSchemaPropertyObject'
+          type: object
+        requiredProperties:
+          items:
+            type: string
+          type: array
+        definitions:
+          additionalProperties:
+            $ref: '#/components/schemas/Item'
+          type: object
+        type:
+          type: string
+        $schema:
+          type: string
+      type: object
+    Links:
+      additionalProperties:
+        $ref: '#/components/schemas/Link'
+      type: object
+    RepresentationModelObject:
+      properties:
+        _links:
+          additionalProperties:
+            $ref: '#/components/schemas/Link'
+          type: object
+      type: object
+    EntityModelDataset:
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        organization:
+          type: string
+        logo:
+          items:
+            format: byte
+            type: string
+          type: array
+        externalId:
+          type: string
+        _links:
+          additionalProperties:
+            $ref: '#/components/schemas/Link'
+          type: object
+      type: object
+    PageMetadata:
+      properties:
+        size:
+          format: int64
+          type: integer
+        totalElements:
+          format: int64
+          type: integer
+        totalPages:
+          format: int64
+          type: integer
+        number:
+          format: int64
+          type: integer
+      type: object
+    PagedModelEntityModelDataset:
+      properties:
+        _embedded:
+          $ref: '#/components/schemas/PagedModelEntityModelDataset__embedded'
+        _links:
+          additionalProperties:
+            $ref: '#/components/schemas/Link'
+          type: object
+        page:
+          $ref: '#/components/schemas/PageMetadata'
+      type: object
+    DatasetRequestBody:
+      example:
+        organization: organization
+        name: name
+        description: description
+        logo:
+        - logo
+        - logo
+        externalId: externalId
+        id: 0
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        organization:
+          type: string
+        logo:
+          items:
+            format: byte
+            type: string
+          type: array
+        externalId:
+          type: string
+      type: object
+    ApplicationResponse:
+      example:
+        applicationStatus: RUNNING
+        apiVersion: apiVersion
+      properties:
+        applicationStatus:
+          enum:
+          - RUNNING
+          - DATABASE_NOT_CONNECTED
+          type: string
+        apiVersion:
+          type: string
+      type: object
+    Link:
+      properties:
+        href:
+          type: string
+        hreflang:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        deprecation:
+          type: string
+        profile:
+          type: string
+        name:
+          type: string
+        templated:
+          type: boolean
+      type: object
+    PagedModelEntityModelDataset__embedded:
+      properties:
+        datasets:
+          items:
+            $ref: '#/components/schemas/EntityModelDataset'
+          type: array
+
